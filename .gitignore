@@ -18,6 +18,7 @@ _mailinglist
 .idea/
 docs/_build/
 .vscode
+scanapi-report.html
 
 # Coverage reports
 htmlcov/
