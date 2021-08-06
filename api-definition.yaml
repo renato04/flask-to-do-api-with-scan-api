@@ -1,0 +1,35 @@
+endpoints:
+  - name: root
+    path: http://localhost:5000/
+    requests:
+      - name: root
+        path: /
+        method: get
+        tests:
+          - name: status_code_is_200
+            assert:  ${{ response.status_code == 200 }} 
+  - name: api
+    path: http://localhost:5000/todo/api/v1.0/
+    requests:
+      - name: login
+        path: /login
+        method: post
+        body: 
+          user: user
+          password: password
+        headers: 
+          Content-Type: application/json
+        tests:
+          - name: status_code_is_200
+            assert:  ${{ response.json()["token"] == "my-secret-token" }}
+        vars:
+          token:  ${{response.json()["token"]}}    
+      - name: all-tasks
+        path: /tasks
+        method: get
+        headers: 
+          Authorization: Bearer ${token}
+        tests:
+          - name: status_code_is_200
+            assert:  ${{ response.json()["tasks"][0]["description"] == "Milk, Cheese, Pizza, Fruit, Tylenol" }}
+                                      
